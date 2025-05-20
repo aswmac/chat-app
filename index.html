@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Chat</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .chat-window {
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-            padding: 10px;
-            width: 300px;
-        }
-        .message-input {
-            width: calc(100% - 40px);
-            margin-top: 10px;
-        }
-        button {
-            margin-left: 5px;
-        }
-    </style>
-</head>
+		<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Live Chat</title>
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						display: grid;
+						justify-content: center; /* Centers horizontally */
+						align-items: center; /* Centers vertically */
+						height: 100vh; /* Full viewport height for vertical centering */
+						margin: 0; /* Removes default margin */
+					}
+					.side-by-side-container {
+						display: grid;
+						grid-template-columns: repeat(2, 300px); /* Two columns of 300px each */
+						gap: 30px; /* Optional: Adds space between the divs */
+						justify-content: center; /* Centers horizontally within the container */
+					}
+					.chat-window {
+						border: 1px solid #ccc;
+						margin-bottom: 20px;
+						padding: 10px;
+						width: 300px;
+					}
+					.message-input {
+						width: calc(100% - 40px);
+						margin-top: 10px;
+					}
+					button {
+						margin-left: 5px;
+					}
+				</style>
+			</head>
 <body>
-    <div id="chat1" class="chat-window">
-        <h3>Chat Window 1</h3>
-        <p id="messages-chat1"></p>
-        <input type="text" class="message-input" placeholder="Type a message..." disabled>
-        <button onclick="claimChat('chat1')">Claim</button>
-        <button onclick="releaseChat('chat1')">Release</button>
-    </div>
-
-    <div id="chat2" class="chat-window">
-	<h3>Chat Window 2</h3>
-	<p id="messages-chat2"></p>
-        <input type="text" class="message-input" placeholder="Type a message..." disabled>
-        <button onclick="claimChat('chat2')">Claim</button>
-        <button onclick="releaseChat('chat2')">Release</button>
-    </div>
-
+    <div class="side-by-side-container">
+			<div id="chat1" class="chat-window">
+				<h3>Chat Window 1</h3>
+				<p id="messages-chat1"></p>
+				<input type="text" class="message-input" placeholder="Type a message..." disabled>
+					<button onclick="claimChat('chat1')">Claim</button>
+					<button onclick="releaseChat('chat1')">Release</button>
+			</div>
+			
+			<div id="chat2" class="chat-window">
+				<h3>Chat Window 2</h3>
+				<p id="messages-chat2"></p>
+				<input type="text" class="message-input" placeholder="Type a message..." disabled>
+					<button onclick="claimChat('chat2')">Claim</button>
+					<button onclick="releaseChat('chat2')">Release</button>
+			</div>
+		</div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
