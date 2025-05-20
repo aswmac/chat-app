@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .chat-window {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 300px;
+        }
+        .message-input {
+            width: calc(100% - 40px);
+            margin-top: 10px;
+        }
+        button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat1" class="chat-window">
+        <h3>Chat Window 1</h3>
+        <p id="messages-chat1"></p>
+        <input type="text" class="message-input" placeholder="Type a message..." disabled>
+        <button onclick="claimChat('chat1')">Claim</button>
+        <button onclick="releaseChat('chat1')">Release</button>
+    </div>
+
+    <div id="chat2" class="chat-window">
+				<h3>Chat Window 2</h3>
+				<p id="message-chat2"></p>
+        <input type="text" class="message-input" placeholder="Type a message..." disabled>
+        <button onclick="claimChat('chat2')">Claim</button>
+        <button onclick="releaseChat('chat2')">Release</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        document.querySelectorAll('.message-input').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage(this.parentNode.id, this.value);
+                    this.value = '';
+                }
+            });
+        });
+
+        function claimChat(chatId) {
+            socket.emit('claimChatWindow', chatId);
+        }
+
+        function releaseChat(chatId) {
+            socket.emit('releaseChatWindow', chatId);
+        }
+
+        function sendMessage(chatId, message) {
+            if (message.trim() !== '') {
+                socket.emit('chatMessage', { chatId, message });
+            }
+        }
+
+        socket.on('newMessage', ({ chatId, message }) => {
+            const messagesElement = document.getElementById(`messages-${chatId}`);
+            const messageElement = document.createElement('p');
+            messageElement.textContent = message;
+            messagesElement.appendChild(messageElement);
+        });
+
+        socket.on('chatWindowClaimed', ({ chatId, claimedBy }) => {
+            if (socket.id === claimedBy) {
+                document.querySelector(`#${chatId} .message-input`).disabled = false;
+            } else {
+                alert(`Chat window ${chatId} is now claimed by another user.`);
+            }
+        });
+
+        socket.on('claimFailed', ({ chatId }) => {
+            alert(`Chat window ${chatId} is already claimed by another user.`);
+        });
+
+        socket.on('chatWindowReleased', ({ chatId }) => {
+            document.querySelector(`#${chatId} .message-input`).disabled = true;
+        });
+    </script>
+</body>
+</html>
+
