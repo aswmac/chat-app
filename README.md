@@ -10,3 +10,4 @@ I further had to do 'npm install express' and 'npm install socket.io' as I did n
 
 The functionality is not quite what I wanted mainly because the enter key has to be pressed for the text to show up on the other client window. Also, the claim button and the release button seem to work well, but I would prefer if the release did not work unilaterally (the other user can release the first user), though really an extra "do you really want to release the other user?" popup probably is best since otherwise a lock remaining from a user that may not be able to release would make problems.
 
+Also, the typed text is not saved anywhere, and is not persistent because on close and reconnect the messages are gone. I would like to have a title like the date maybe that keeps the text like a record/notebook.
